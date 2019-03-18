@@ -10,9 +10,10 @@ import UIKit
 
 class PageVC: UIPageViewController {
 
-    var currentPage = 0
-    var locationsArray = ["Local City", "Sydney, Australia", "Acra, Ghana", "Uglich, Russia"]
+
     
+    var currentPage = 0
+    var locationsArray = [WeatherLocation]()
     var pageControl: UIPageControl!
     var listButton: UIButton!
     var barButtonWidth: CGFloat = 44
@@ -23,7 +24,11 @@ class PageVC: UIPageViewController {
         
         delegate = self
         dataSource = self
-
+        
+        var newLocation = WeatherLocation()
+        newLocation.name = "Unknown Weather Location"
+        locationsArray.append(newLocation)
+        
         setViewControllers([createDetailVC(forPage: 0)], direction: .forward, animated: false, completion: nil)
         // Do any additional setup after loading the view.
     }
@@ -70,7 +75,7 @@ class PageVC: UIPageViewController {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
         if segue.identifier == "ToListVC" {
-            let destination = segue.destination as! listVC
+            let destination = segue.destination as! ListVC
             destination.locationsArray = locationsArray
             destination.currentPage = currentPage
             
@@ -85,7 +90,7 @@ class PageVC: UIPageViewController {
     func createDetailVC(forPage page: Int) -> DetailVC {
         currentPage = min(max(0, page), locationsArray.count-1)
         
-        let detailVC = storyboard!.instantiateInitialViewController(withIdentifier: "DetailVC") as! DetailVC
+        let detailVC = storyboard!.instantiateViewController(withIdentifier: "DetailVC") as! DetailVC
         
         detailVC.locationsArray = locationsArray
         detailVC.currentPage = currentPage
@@ -121,9 +126,6 @@ extension PageVC: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if let currentViewController = pageViewController.viewControllers?[0] as? DetailVC {
             pageControl.currentPage = currentViewController.currentPage
-            
-            
         }
     }
-    
 }
