@@ -15,6 +15,7 @@ class ListVC: UIViewController {
     var locationsArray = [WeatherLocation]()
     var currentPage = 0
     var placesClient: GMSPlacesClient!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
